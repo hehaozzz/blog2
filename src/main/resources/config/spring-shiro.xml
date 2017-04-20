@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd"
+	default-lazy-init="true">
+	<context:property-placeholder location="classpath:config/redis.properties"
+		ignore-unresolvable="true"></context:property-placeholder>
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+
+	<!-- 数据库保存的密码是使用MD5算法加密的，所以这里需要配置一个密码匹配对象 -->
+	<bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher">
+		<property name="hashIterations" value="2" />
+	</bean>
+
+	<!-- 缓存管理 -->
+	<!-- <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean> -->
+
+	<!-- 使用Shiro自带的JdbcRealm类 指定密码匹配所需要用到的加密对象 指定存储用户、角色、权限许可的数据源及相关查询语句 -->
+	<bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="credentialsMatcher" ref="credentialsMatcher" />
+		<property name="permissionsLookupEnabled" value="true" />
+		<property name="saltStyle" value="COLUMN" />
+		<property name="authenticationQuery"
+			value="SELECT password,salt FROM sec_user WHERE user_name = ?"></property>
+		<property name="userRolesQuery"
+			value="SELECT role_name from sec_user_role left join sec_role using(role_id) left join sec_user using(user_id) WHERE user_name = ?"></property>
+		<property name="permissionsQuery"
+			value="SELECT permission_name FROM sec_role_permission left join sec_role using(role_id) left join sec_permission using(permission_id) WHERE role_name = ?"></property>
+	</bean>
+
+	<bean id="redisManager" class="cn.blog2.redis.RedisManager">
+		<property name="host" value="${redis_host}" />
+		<property name="port" value="${redis_port}" />
+		<property name="expire" value="${redis_expire}" />
+		<property name="timeout" value="${redis_timeout}" />
+		<property name="password" value="${redis_pwd}" />
+	</bean>
+
+	<bean id="redisSessionDAO" class="cn.blog2.redis.RedisSessionDAO">
+		<property name="redisManager" ref="redisManager" />
+	</bean>
+
+	<bean id="sessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<!-- 设置全局会话超时时间，默认30分钟(1800000) -->
+		<property name="globalSessionTimeout" value="7200000" />
+		<!-- session存储的实现 -->
+		<property name="sessionDAO" ref="redisSessionDAO" />
+		<property name="sessionIdCookie.name" value="JSID" />
+	</bean>
+
+	<!-- Shiro安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="jdbcRealm"></property>
+		<property name="sessionManager" ref="sessionManager"></property>
+		<!-- 这里没有必要注入cacheManager，通过查看源码可知，在这里配的cacheManager最终会被set到sessionDAO中， 
+			由于我们要自己写sessionDAO，所以没必要，很多人没有看源码，以为在这儿配了就能用，其实不然，要使得cacheManager生效， 你接下来配置的sessionManager和sessionDAO都必须实现CacheManagerAware接口才行 -->
+		<!-- <property name="cacheManager" ref="cacheManager"></property> -->
+	</bean>
+
+	<!-- Shiro主过滤器本身功能十分强大，其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 Web应用中，Shiro可控制的Web请求必须经过Shiro主过滤器的拦截，Shiro对基于Spring的Web应用提供了完美的支持 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- Shiro的核心安全接口，这个属性是必须的 -->
+		<property name="securityManager" ref="securityManager"></property>
+		<!-- 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
+		<property name="loginUrl" value="/view?oper=list"></property>
+		<!-- 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在LoginController里硬编码) -->
+		<!-- <property name="successUrl" value="/upload.shtml" ></property> -->
+		<!-- 用户访问未对其授权的资源时，所显示的连接 -->
+		<property name="unauthorizedUrl" value="/unauthorized.shtml"></property>
+		<property name="filterChainDefinitions">
+			<value>
+				<!--最常用的有authc,roles,perms,user,anon， authc表示需要认证，roles表示角色，perms表示权限，anon表示游客， 
+					user表示用户，但跟authc有所不同。当应用开启了rememberMe时，关闭浏览器，下次再访问的时候就是一个user,但不是authc，authc是需要从新谁的，user不需要。 
+					/show.shtml = authc,roles["超级管理员"] /fileOperate.shtml = authc,perms["超级管理员":"高级"] -->
+				/add = authc
+				/delete = authc
+				/edit = authc
+			</value>
+		</property>
+	</bean>
+
+	<!-- 开启Shiro的注解(如@RequiresRoles，@RequiresPermissions)，需借助SpringAOP扫描使用Shiro注解的类， 
+		并在必要时进行安全逻辑验证 -->
+	<!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean> 
+		<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"> 
+		<property name="securityManager" ref="securityManager"></property> </bean> -->
+
+</beans>

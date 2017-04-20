@@ -1,0 +1,179 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	font-family: 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei UI',
+		'Microsoft YaHei', 'Noto Sans CJK SC', Sathu, EucrosiaUPC, sans-serif;
+}
+
+a:link, a:visited, a:hover, a:active {
+	color: #333;
+	text-decoration: none;
+}
+
+.blogTbar {
+	min-width: 1024px;
+	height: 30px;
+	background-color: #333;
+}
+
+.blogTbar-fixed-top {
+	top: 0;
+	border-width: 0 0 1px;
+	border-radius: 0;
+	position: fixed;
+	right: 0;
+	left: 0;
+	z-index: 1030;
+}
+
+.blogTbar-fixed-bottom {
+	bottom: 0;
+	margin-bottom: 0;
+	border-width: 1px 0 0;
+	border-radius: 0;
+	position: fixed;
+	right: 0;
+	left: 0;
+	z-index: 1030;
+}
+
+.blogTbar .inner {
+	position: relative;
+	max-width: 1048px;
+	margin: 0 auto;
+}
+
+.blogTbarL {
+	float: left;
+}
+
+.blogTbarR {
+	float: right;
+}
+
+ul, ol {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+li {
+	position: relative;
+	float: left;
+}
+
+a.bl {
+	border-left: 1px solid #5d5d5d;
+}
+
+a.barA {
+	color: #c4c3c3;
+	float: left;
+	line-height: 15px;
+	padding: 0 12px;
+	margin: 7px 0 0;
+	background-color: transparent;
+	text-decoration: none;
+}
+
+a.barA:hover {
+	color: #ffffff;
+}
+
+.vertical-container {
+	height: 100%;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+}
+
+.maindiv {
+	width: 1024px;
+	margin: 40px auto;
+}
+
+.blogContent {
+	margin: 30px auto 30px auto;
+}
+
+.blogForm {
+	border: none;
+	outline: none;
+	width: 100%;
+	height: 31px;
+}
+
+.blogHeader {
+	margin: 0px 0 20px;
+	border-bottom: 1px solid #ddd;
+}
+
+.row {
+	margin-bottom: 10px;
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+.blogList {
+	padding: 10px 0px;
+	border-bottom: 1px solid #eee;
+}
+
+.page-header {
+	margin: 0px 0 20px;
+}
+
+.pagination-sm>li>a, .pagination-sm>li>span {
+	padding: 0px 12px;
+}
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover,
+	.pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover
+	{
+	background-color: #333;
+	border-color: #333;
+}
+
+.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus,
+	.pagination>li>span:hover {
+	color: #333;
+}
+
+.pagination>li>a, .pagination>li>span {
+	color: #333;
+}
+
+.breadcrumb {
+	padding: 0;
+	background-color: #ffffff;
+}
+
+.modal-header {
+	padding: 2px;
+}
+
+.nav-tabs>li>a {
+	margin: 0px;
+}
+
+.signTabLi {
+	text-align: center;
+	width: 50%;
+}
+
+#signInErrorInfo, #signUpErrorInfo {
+	color: #a94442;
+}

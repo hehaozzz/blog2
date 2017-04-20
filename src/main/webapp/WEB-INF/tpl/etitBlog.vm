@@ -1,0 +1,50 @@
+#set($title="EditBlog Page")
+#parse("header.vm")
+<div class="maindiv">
+	<div style="height: 20px;">
+		<ol class="breadcrumb">
+		    <li><a href="$link.contextPath/view?oper=list">首页</a></li>
+		    <li><a href="$link.contextPath/view?oper=list&author=mine">我的博客</a></li>
+		    <li class="active">博客编辑</li>
+		</ol>
+	</div>
+	<form id="editForm" role="form" action="$link.contextPath/edit?oper=do" method="post">  
+		<input type="hidden" name="id" value="$!data.id" />
+		<div class="blogHeader">
+			<input type="text" class="blogForm center-block" name="title" value="$!data.title" placeholder="无标题博客" maxlength="100"  style="font-size: 20px;"></input>
+			<textarea id="desc" class="blogForm center-block" name="description" placeholder="无摘要" rows="3" maxlength="300">$!data.description</textarea>
+		</div>
+		<div style="width:1024px">
+			<textarea id="editor" name="content" style="height:500px;">$!data.content</textarea>
+			<input type="hidden" name="md" value="0"></input>
+		</div>
+	</form>
+</div>
+<div class="blogTbar blogTbar-fixed-bottom"> 
+    <div class="inner"> 
+        <div class="blogTbarR">
+	        <button id="release" data-loading-text="发布中..." type="button" class="btn btn-default" style="margin: 4px;padding: 0 12px;">&nbsp;&nbsp;发&nbsp;&nbsp;布&nbsp;&nbsp;</button>
+	    </div>
+    </div> 
+</div>
+<link rel="stylesheet" type="text/css" href="$link.contextPath/css/wangEditor.min.css">
+<script type="text/javascript" src="$link.contextPath/js/wangEditor.min.js"></script>
+<script type="text/javascript">
+	var editor = new wangEditor('editor');
+	editor.config.uploadImgUrl = '$link.contextPath/upload';
+	editor.config.uploadImgFileName = 'wangEditor-image-file'
+	editor.create();
+    $("#desc").focus(function(){
+		$(this).animate({height:"+=40px"},'fast');
+	});
+	$("#desc").blur(function(){
+		$(this).animate({height:"-=40px"},'fast');
+	});
+	$("#release").click(function(){
+        $(this).button('loading').delay(1000).queue(function() {
+        	//$(this).button('reset');
+            //$(this).dequeue(); 
+        });
+		$("#editForm").submit();
+    });
+</script>

@@ -1,0 +1,32 @@
+#set($title="BlogDetail Page")
+#parse("header.vm")
+<link rel="stylesheet" type="text/css" href="$link.contextPath/css/wangEditor.min.css">
+<div class="maindiv">
+	<div style="height: 20px;">
+		<ol class="breadcrumb">
+		    <li><a href="$link.contextPath/view?oper=list">首页</a></li>
+		    <li><a href="$link.contextPath/view?oper=list&author=$data.author">$data.author的博客</a></li>
+		    <li class="active">博客详情</li>
+		</ol>
+	</div>
+	<div class="page-header">
+		<h3><strong>$!data.title</strong></h3>
+		<div class="pull-left"><small class="text-muted">$data.author 发表于 $date.format("yyyy-MM-dd",$!data.createtime)</small></div>
+		#if($!data.user_name == $!data.author)
+			<div class="btn-group pull-right">
+			    <button type="button" class="btn btn-default btn-xs" onclick="window.location.href='$link.contextPath/edit?id=$!data.id'">编辑</button>
+			    <button type="button" class="btn btn-default btn-xs" onclick="window.location.href='$link.contextPath/delete?id=$!data.id'">删除</button>
+			</div>
+		#end
+		<div class="clearfix"></div>
+	</div>
+	<div style=" clear: both;"></div>
+	<div class="text-muted"><em>摘要: $!data.description</h5></em></div>
+	<div class="blogContent">
+		<div class="wangEditor-container" style="border: none;">
+			<div class="wangEditor-txt" style="padding: 0px;">
+				$!data.content
+			</div>
+		</div>
+	</div>
+</div>

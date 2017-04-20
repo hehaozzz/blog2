@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.blog2.dao.ArticleMapper">
+	<resultMap id="BaseResultMap" type="cn.blog2.entity.Article">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="TITLE" jdbcType="VARCHAR" property="title" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="AUTHOR" jdbcType="DECIMAL" property="author" />
+		<result column="CONTENT" jdbcType="CLOB" property="content" />
+		<result column="MD" jdbcType="CLOB" property="md" />
+	</resultMap>
+	<insert id="userRegist" parameterType="java.util.Map">
+		insert into sec_user
+		(user_name,password,salt)
+		values
+		(#{user_name},#{password},#{salt})
+	</insert>
+	<insert id="userRoleRegist" parameterType="java.util.Map">
+		insert into
+		sec_user_role (role_id,user_id)
+		values ((select role_id from sec_role
+		where role_name=#{role_name}),
+		(select user_id from sec_user where
+		user_name=#{user_name}))
+	</insert>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		article
+		where id = #{id}
+	</delete>
+	<insert id="insert" parameterType="java.util.Map">
+		insert into article (
+		title,
+		description,
+		createtime, author, content, md
+		)
+		values
+		(#{title},
+		#{description},
+		sysdate(),
+		(select user_id from sec_user
+		where
+		user_name=#{author}), #{content}
+		,
+		#{md}
+		)
+	</insert>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultType="cn.blog2.entity.ResultMap">
+		select id, title, description, createtime, (select
+		user_name from
+		sec_user where user_id=t.author) as author, content, md
+		from
+		article t
+		where id = #{id}
+	</select>
+	<select id="selectAll" parameterType="java.util.Map" resultType="cn.blog2.entity.ResultMap">
+		select id, title, description,
+		createtime, (select user_name from
+		sec_user where user_id=t.author) as
+		author, content, md
+		from article t
+		<where>
+			<if test="author != null and author != ''.trim()">
+				and author = (select user_id from sec_user where
+				user_name=#{author})
+			</if>
+		</where>
+		order by t.createtime desc
+	</select>
+	<update id="updateByPrimaryKey" parameterType="java.util.Map">
+		update article
+		set
+		title = #{title},
+		description =
+		#{description},
+		createtime = sysdate(),
+		content =
+		#{content},
+		md = #{md}
+		where id =
+		#{id}
+	</update>
+</mapper>

@@ -1,0 +1,11 @@
+##分转换为元
+#macro(centToDollar $cent)#if($cent)$!{number.format("#0.00", $!{math.div($cent,100.00)})}#end#end
+
+##价格格式化
+#macro(formatMoney $money)#if($money)$!{number.format("#0.00", $!{math.div($money,1.00)})}#end#end
+
+##重量格式化
+#macro(formatWeight $weight)#if($weight)$!{number.format("#0.000", $!{math.div($weight,1.000)})}#end#end
+
+##百分比格式化,rate是除数,默认为100
+#macro(formatRate $value $rate)#if($value)#if("$!{rate}" == "")#set($rate = 100.00)#end$!{math.div($value,$rate)}#else 0#end#end

@@ -1,0 +1,211 @@
+<div class="blogTbar blogTbar-fixed-top"> 
+    <div class="inner"> 
+        <ul class="blogTbarL"> 
+        	<li><a class="barA" href='$link.contextPath/view?oper=list'>首页</a></li>
+        </ul> 
+        <ul class="blogTbarR" id="main"></ul> 
+    </div> 
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="signModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog"  style="width: 300px;">
+		<div class="modal-content">
+			<ul id="myTab" class="nav nav-tabs">
+				<li class="active signTabLi">
+					<a href="#ltab" data-toggle="tab">登&nbsp;录</a>
+				</li>
+				<li class="signTabLi">
+					<a href="#rtab" data-toggle="tab">注&nbsp;册</a>
+				</li>
+			</ul>
+			<div id="myTabContent" class="tab-content" style="margin-top: 10px;">
+				<div class="tab-pane fade in active" id="ltab">
+					<form id="lForm" action="$link.contextPath/login?oper=do" method="post" role="form">  
+						<div class="row">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<input type="text" id="l_user_name" name="user_name" class="form-control" placeholder="请输入用户名">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<input type="password" id="l_password" name="password" class="form-control" placeholder="请输入密码">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group">
+								<div class="col-sm-7">
+									<input type="text" id="l_verifyCode" name="verifyCode" class="form-control" placeholder="请输入验证码">
+								</div>
+								<div class="col-sm-5">
+									<img onclick="changeVerifyCodeImage();" class="verifyCodeImage" src="" alt="点击更换验证码" width="70" height="34" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<button id="signIn" type="button" data-loading-text="正在登录..." class="btn btn-default btn-block">登 录</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="tab-pane fade" id="rtab">
+					<form id="rForm" action="$link.contextPath/regist?oper=do" method="post" role="form">  
+						<div class="row">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<input type="text" id="r_user_name" name="user_name" class="form-control" placeholder="请输入用户名">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<input type="password" id="r_password" name="password" class="form-control" placeholder="请输入密码">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group">
+								<div class="col-sm-7">
+									<input type="text" id="r_verifyCode" name="verifyCode" class="form-control" placeholder="请输入验证码">
+								</div>
+								<div class="col-sm-5">
+									<img onclick="changeVerifyCodeImage();" class="verifyCodeImage" src="" alt="点击更换验证码" width="70" height="34" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<button id="signUp" type="button" data-loading-text="正在注册..." class="btn btn-default btn-block">注 册</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	function sign(k){
+		changeVerifyCodeImage();
+		if(k==0)
+			$('#myTab li:eq(0) a').tab('show');
+		if(k==1)
+			$('#myTab li:eq(1) a').tab('show');
+	};
+	$('#signModel').on('show.bs.modal', function (e) { 
+		//关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零 
+		$(this).css('display', 'block'); 
+		var modalHeight=$(window).height()*2 / 5 - $('#signModel .modal-dialog').height() / 2; 
+		$(this).find('.modal-dialog').css({'margin-top': modalHeight}); 
+	});
+	function init(){
+		$.ajax({
+			type : "post",
+			url : "checkLogined",
+			success : function(data) {	
+				if(data=="unlogin") {
+					var html="<li><a href='#' onclick='sign(0);' class='barA' data-toggle='modal' data-target='#signModel'>登录</a></li>" + 
+            				 "<li><a href='#' onclick='sign(1);' class='barA bl' data-toggle='modal' data-target='#signModel'>注册</a></li>";
+					$("#main").html(html);
+				}else{
+					var html="<li><a href='javascript:void(0)' class='barA'>" + data + "</a></li>" +
+							"<li><a href='$link.contextPath/view?oper=list&author=mine' class='barA bl'>我的博客</a></li>" + 
+							"<li><a href='$link.contextPath/add' class='barA bl'>新建博客</a></li>" + 
+							"<li><a href='$link.contextPath/logout' class='barA bl'>退出</a></li>";
+					$("#main").html(html);
+				}
+			}
+		});
+	}
+	function changeVerifyCodeImage() { 
+		$('.verifyCodeImage').attr('src','$link.contextPath/getVerifyCodeImage?id='+Math.random());
+	};
+	$(document).ready(function(){
+		init();
+		$("#signIn").click(function(){
+			$(this).button('loading').delay(0).queue(function() {
+				var user_name = $("#l_user_name").val();
+				var password = $("#l_password").val();
+				var verifyCode = $("#l_verifyCode").val();
+				$.ajax({
+					type : "post",
+					url : "login?oper=do",
+					dataType: 'json',
+					data:{  
+						user_name : user_name,
+						password : password,
+						verifyCode : verifyCode
+					}, 
+					success : function(data) {
+						//var result = eval ("(" + data + ")");
+						if(data.success){
+							window.location.reload(true);
+						}else{
+							changeVerifyCodeImage();
+							if($("#signInErrorInfo").length > 0)
+								$("#signInErrorInfo").text(data.msg);
+							else{
+								var html='<div class="row" style="margin-top: -10px;">'+
+											'<div class="form-group">'+
+												'<div class="col-sm-12" id="signInErrorInfo">'+
+													data.msg+
+												'</div>'+
+											'</div>'+
+										 '</div>';
+								$("#lForm").append(html);
+							}
+							$("#signIn").button('reset').dequeue();
+						}
+					}
+				});
+			});
+		});
+		$("#signUp").click(function(){
+			$(this).button('loading').delay(0).queue(function() {
+				var user_name = $("#r_user_name").val();
+				var password = $("#r_password").val();
+				var verifyCode = $("#r_verifyCode").val();
+				$.ajax({
+					type : "post",
+					url : "$link.contextPath/regist?oper=do",
+					dataType: 'json',
+					data:{  
+						user_name : user_name,
+						password : password,
+						verifyCode : verifyCode
+					}, 
+					success : function(data) {	
+						//var result = eval ("(" + data + ")");
+						if(data.success){
+							window.location.reload(true);
+						}else{
+							changeVerifyCodeImage();
+							if($("#signUpErrorInfo").length > 0)
+								$("#signUpErrorInfo").text(data.msg);
+							else{
+								var html='<div class="row" style="margin-top: -10px;">'+
+											'<div class="form-group">'+
+												'<div class="col-sm-12" id="signUpErrorInfo">'+
+													data.msg+
+												'</div>'+
+											'</div>'+
+										 '</div>';
+								$("#rForm").append(html);
+							}
+							$("#signUp").button('reset').dequeue();
+						}
+					}
+				});
+			});
+		});
+	});
+</script>

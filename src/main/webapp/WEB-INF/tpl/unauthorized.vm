@@ -1,0 +1,5 @@
+#set($title="Unauthorized Page")
+#parse("header.vm")
+<div class="maindiv">
+	<P>未获得相应权限！</P> 
+</div>

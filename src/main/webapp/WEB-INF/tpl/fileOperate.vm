@@ -1,0 +1,17 @@
+#set($title="fileOperate")
+<form class="form-inline" role="form" action="$link.contextPath/upload" method="post" enctype="multipart/form-data">
+	<div class="form-group">
+		<input type="file" name="wangEditor-image-file" />
+		<button type="submit" class="btn btn-default">upload</button>
+		<span>$!{result}</span>
+	</div>
+</form>
+<form class="form-inline" role="form" action="$link.contextPath/downLoad" method="post"> 
+	<div class="form-group">
+		<label for="name">name</label>
+		<input type="text" name="name" class="form-control" placeholder="please input file name" />
+		<label for="filePath">path</label>
+		<input type="text" name="filePath" class="form-control" placeholder="please input file path" />
+		<button type="submit" class="btn btn-default">download</button>
+	</div>
+</form>

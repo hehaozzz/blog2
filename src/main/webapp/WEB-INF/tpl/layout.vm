@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>$!title</title>
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<link rel="icon" href="$link.contextPath/images/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="$link.contextPath/images/favicon.ico" type="image/x-icon"/>
+<link rel="bookmark" href="$link.contextPath/images/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="$link.contextPath/css/bootstrap-3.3.7.min.css">  
+<link rel="stylesheet" href="$link.contextPath/css/style.css"> 
+<script src="$link.contextPath/js/jquery-3.1.1.min.js"></script>
+<script src="$link.contextPath/js/bootstrap-3.3.7.min.js"></script>
+</head>
+<body>
+	$screen_content
+</body>
+</html>

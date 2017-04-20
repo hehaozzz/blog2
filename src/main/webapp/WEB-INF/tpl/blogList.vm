@@ -1,0 +1,30 @@
+#set($title="Blog Page")
+#parse("header.vm")
+<div class="maindiv">
+#foreach($item in $pageInfo.getList())
+	<div class="blogList">
+		<header>
+			<a href="$link.contextPath/view?oper=detail&id=$item.id" style="font-size: 16px;">$item.title</a>
+		</header>
+		<section><span class="text-muted">$!item.description</span></section>
+		<footer><small class="text-muted">$item.author 发表于 $date.format("yyyy-MM-dd",$!item.createtime)</small></footer>
+	</div>
+#end
+<ul class="pagination pagination-sm">
+	#if(!$pageInfo.isIsFirstPage())
+		<li><a href="$link.contextPath/view?oper=list&author=$author&start=$pageInfo.getPrePage()&limit=10"
+		>&laquo;</a></li>
+	#end
+	#foreach($navigatepage in $pageInfo.getNavigatepageNums())
+		<li #if($pageInfo.getPageNum() == $navigatepage)
+			class="active" #end >
+			<a href="$link.contextPath/view?oper=list&author=$author&start=$navigatepage&limit=10">$navigatepage</a>
+		</li>
+	#end
+	#if(!$pageInfo.isIsLastPage())
+		<li>
+			<a href="$link.contextPath/view?oper=list&author=$author&start=$pageInfo.getNextPage()&limit=10">&raquo;</a>
+		</li>
+	#end
+</ul>
+</div>
