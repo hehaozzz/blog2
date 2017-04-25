@@ -21,7 +21,7 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .blogTbar {
-	min-width: 1024px;
+	min-width: 925px;
 	height: 30px;
 	background-color: #333;
 }
@@ -49,7 +49,7 @@ a:link, a:visited, a:hover, a:active {
 
 .blogTbar .inner {
 	position: relative;
-	max-width: 1048px;
+	max-width: 925px;
 	margin: 0 auto;
 }
 
@@ -67,9 +67,8 @@ ul, ol {
 	list-style: none;
 }
 
-li {
-	position: relative;
-	float: left;
+.blogTbarL li, .blogTbarR li {
+	display: inline-block;
 }
 
 a.bl {
@@ -101,8 +100,8 @@ a.barA:hover {
 }
 
 .maindiv {
-	width: 1024px;
-	margin: 40px auto;
+	width: 900px;
+	margin: 10px auto;
 }
 
 .blogContent {
@@ -113,7 +112,7 @@ a.barA:hover {
 	border: none;
 	outline: none;
 	width: 100%;
-	height: 31px;
+	/* height: 31px; */
 }
 
 .blogHeader {

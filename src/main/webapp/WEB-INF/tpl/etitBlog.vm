@@ -14,7 +14,7 @@
 			<input type="text" class="blogForm center-block" name="title" value="$!data.title" placeholder="无标题博客" maxlength="100"  style="font-size: 20px;"></input>
 			<textarea id="desc" class="blogForm center-block" name="description" placeholder="无摘要" rows="3" maxlength="300">$!data.description</textarea>
 		</div>
-		<div style="width:1024px">
+		<div>
 			<textarea id="editormd" name="content" style="height:500px;">$!data.content</textarea>
 			<input type="hidden" name="md" value="0"></input>
 		</div>

@@ -1,4 +1,4 @@
-<div class="blogTbar blogTbar-fixed-top"> 
+<div class="blogTbar"> 
     <div class="inner"> 
         <ul class="blogTbarL"> 
         	<li><a class="barA" href='$link.contextPath/view?oper=list'>首页</a></li>
