@@ -27,7 +27,7 @@ public class FileOperateUtil {
 	}
 
 	@RequestMapping({ "/upload" })
-	public void upload(@RequestParam(value = "wangEditor-image-file", required = false) MultipartFile attach,
+	public void upload(@RequestParam(value = "editormd-image-file", required = false) MultipartFile attach,
 			HttpServletRequest request, HttpServletResponse response, Model model)
 					throws IllegalStateException, IOException {
 		try {
@@ -44,12 +44,13 @@ public class FileOperateUtil {
 			File realFile = new File(rootPath + File.separator + attach.getOriginalFilename());
 			this.logger.info("realFile:" + realFile);
 			FileUtils.copyInputStreamToFile(attach.getInputStream(), realFile);
-			response.getWriter().write("/simpleblog/resources/upload/" + attach.getOriginalFilename());
+			response.getWriter().write( "{\"success\": 1, \"message\":\"上传成功\",\"url\":\"/blog2/resources/upload/" + attach.getOriginalFilename() + "\"}" );
 			long endTime = System.currentTimeMillis();
 			this.logger.info("上传用时：" + String.valueOf(endTime - startTime) + "ms");
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
+				response.getWriter().write( "{\"success\":0}" );
 				response.getWriter().write("error|上传失败");
 			} catch (IOException e1) {
 				e1.printStackTrace();

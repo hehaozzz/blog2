@@ -1,6 +1,5 @@
 #set($title="BlogDetail Page")
 #parse("header.vm")
-<link rel="stylesheet" type="text/css" href="$link.contextPath/css/wangEditor.min.css">
 <div class="maindiv">
 	<div style="height: 20px;">
 		<ol class="breadcrumb">
@@ -23,10 +22,43 @@
 	<div style=" clear: both;"></div>
 	<div class="text-muted"><em>摘要: $!data.description</h5></em></div>
 	<div class="blogContent">
-		<div class="wangEditor-container" style="border: none;">
-			<div class="wangEditor-txt" style="padding: 0px;">
-				$!data.content
-			</div>
-		</div>
+		<div id="editormd-view">
+            <textarea style="display:none;"></textarea>
+            <div id="append" style="display:none;">$!data.content</div>   
+        </div>
 	</div>
 </div>
+<link rel="stylesheet" href="$link.contextPath/css/editormd.preview.css" />
+<script src="$link.contextPath/js/lib/marked.min.js"></script>
+<script src="$link.contextPath/js/lib/prettify.min.js"></script>
+<script src="$link.contextPath/js/lib/raphael.min.js"></script>
+<script src="$link.contextPath/js/lib/underscore.min.js"></script>
+<script src="$link.contextPath/js/lib/sequence-diagram.min.js"></script>
+<script src="$link.contextPath/js/lib/flowchart.min.js"></script>
+<script src="$link.contextPath/js/lib/jquery.flowchart.min.js"></script>
+<script src="$link.contextPath/js/editormd.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var EditormdView;
+		EditormdView = editormd.markdownToHTML("editormd-view", {
+			markdown : $("#append").text(),
+			//htmlDecode : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
+			htmlDecode : "style,script,iframe",  // you can filter tags decode
+			//toc : false,
+			tocm : true,    // Using [TOCM]
+			//tocContainer : "#custom-toc-container", // 自定义 ToC 容器层
+			//gfm : false,
+			//tocDropdown : true,
+			//markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+			emoji : true,
+			taskList : true,
+			tex : true,  // 默认不解析
+			flowChart : true,  // 默认不解析
+			sequenceDiagram : true,  // 默认不解析
+		});
+		//console.log("返回一个 jQuery 实例 =>", testEditormdView);
+		// 获取Markdown源码
+		//console.log(EditormdView.getMarkdown());
+		//alert(EditormdView.getMarkdown());
+	});
+</script>
